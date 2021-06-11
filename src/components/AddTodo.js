@@ -17,14 +17,14 @@ const AddTodo = ({ onAdd }) => {
   }
 
   return (
-    <form className="form" onSubmit={onSubmit}>
+    <form onSubmit={onSubmit}>
       <input
         type="text"
         placeholder="Todo"
         value={task}
         onChange={(e) => setTask(e.target.value)}
       />
-      <input type="submit" value="Add" />
+      <input className="btn" type="submit" value="Add" />
     </form>
   );
 };
