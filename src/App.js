@@ -38,7 +38,7 @@ const App = () => {
   return (
     <div className="App">
       <Header />
-      <div>
+      <div className="form">
         <AddTodo onAdd={addTodo} />
         {todos.length > 0 ? (
           <Button color={"red"} text={"Delete All"} onClick={deleteAll} />
