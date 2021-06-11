@@ -26,7 +26,7 @@ const App = () => {
   }
 
   function deleteAll() {
-    setTodos(todos.filter((todo) => todo.id === -1));
+    setTodos([]);
   }
 
   function addTodo(todo) {
