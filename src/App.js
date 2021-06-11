@@ -40,7 +40,11 @@ const App = () => {
       <Header />
       <div>
         <AddTodo onAdd={addTodo} />
-        <Button color={"red"} text={"Delete All"} onClick={deleteAll} />
+        {todos.length > 0 ? (
+          <Button color={"red"} text={"Delete All"} onClick={deleteAll} />
+        ) : (
+          ""
+        )}
       </div>
       {todos.length > 0 ? (
         <Todos todos={todos} onDelete={deleteTodo} />
