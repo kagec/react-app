@@ -11,6 +11,12 @@ const AddTodo = ({ onAdd }) => {
       return;
     }
 
+    if (!task.match(/\S/)) {
+      alert("Please add a todo");
+      setTask("");
+      return;
+    }
+
     onAdd(task);
 
     setTask("");
