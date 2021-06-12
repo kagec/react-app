@@ -51,6 +51,14 @@ body {
   font-family: inherit;
 }
 
+.btn-filter {
+  background-color: rgb(226, 223, 223);
+}
+
+.btn-filter[aria-pressed="true"] {
+  background-color: grey;
+}
+
 .form {
   display: flex;
   justify-content: space-between;
