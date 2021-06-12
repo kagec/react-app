@@ -4,6 +4,15 @@ import Header from "./components/Header";
 import Todos from "./components/Todos";
 import AddTodo from "./components/AddTodo";
 import Button from "./components/Button";
+import FilterButton from "./components/FilterButton";
+
+const FILTER_LIST = {
+  All: () => true,
+  Completed: (todo) => todo.completed,
+  Incompleted: (todo) => !todo.completed,
+};
+
+const FILTER_NAME = Object.keys(FILTER_LIST);
 
 const App = () => {
   const [todos, setTodos] = useState([
@@ -23,6 +32,15 @@ const App = () => {
       completed: false,
     },
   ]);
+  const [filter, setFilter] = useState("All");
+  const filterList = FILTER_NAME.map((name) => (
+    <FilterButton
+      name={name}
+      key={name}
+      isPressed={name === filter}
+      setFilter={setFilter}
+    />
+  ));
 
   function deleteTodo(id) {
     setTodos(todos.filter((todo) => todo.id !== id));
@@ -57,8 +75,13 @@ const App = () => {
           ""
         )}
       </div>
+      {filterList}
       {todos.length > 0 ? (
-        <Todos todos={todos} onDelete={deleteTodo} onClick={toggleCompleted} />
+        <Todos
+          todos={todos.filter(FILTER_LIST[filter])}
+          onDelete={deleteTodo}
+          onClick={toggleCompleted}
+        />
       ) : (
         "No Todos To Show"
       )}
