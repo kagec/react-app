@@ -33,6 +33,10 @@ body {
   overflow-wrap: break-word;
 }
 
+.completed {
+  background-color: rgb(99, 211, 99);
+}
+
 .btn {
   display: inline-block;
   background: green;

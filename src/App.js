@@ -10,14 +10,17 @@ const App = () => {
     {
       id: 0,
       task: "Eat",
+      completed: false,
     },
     {
       id: 1,
       task: "Sleep",
+      completed: false,
     },
     {
       id: 2,
       task: "Repeat",
+      completed: false,
     },
   ]);
 
@@ -31,8 +34,19 @@ const App = () => {
 
   function addTodo(todo) {
     const id = Math.floor(Math.random() * 10000) + 1;
-    const newTodo = { id, task: todo };
+    const newTodo = { id, completed: false, task: todo };
     setTodos([...todos, newTodo]);
+  }
+
+  function toggleCompleted(id) {
+    const todoToCheck = todos.find((todo) => todo.id === id);
+    const toggledTodo = { ...todoToCheck, completed: !todoToCheck.completed };
+
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: toggledTodo.completed } : todo
+      )
+    );
   }
 
   return (
@@ -47,7 +61,7 @@ const App = () => {
         )}
       </div>
       {todos.length > 0 ? (
-        <Todos todos={todos} onDelete={deleteTodo} />
+        <Todos todos={todos} onDelete={deleteTodo} onClick={toggleCompleted} />
       ) : (
         "No Todos To Show"
       )}
