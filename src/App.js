@@ -39,12 +39,9 @@ const App = () => {
   }
 
   function toggleCompleted(id) {
-    const todoToCheck = todos.find((todo) => todo.id === id);
-    const toggledTodo = { ...todoToCheck, completed: !todoToCheck.completed };
-
     setTodos(
       todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: toggledTodo.completed } : todo
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
       )
     );
   }
