@@ -75,7 +75,7 @@ const App = () => {
           ""
         )}
       </div>
-      {filterList}
+      {todos.length > 0 ? filterList : ""}
       {todos.length > 0 ? (
         <Todos
           todos={todos.filter(FILTER_LIST[filter])}
