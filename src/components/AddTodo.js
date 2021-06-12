@@ -6,18 +6,15 @@ const AddTodo = ({ onAdd }) => {
   function onSubmit(e) {
     e.preventDefault();
 
-    if (!task) {
+    const trimmed = task.trim();
+
+    if (!trimmed) {
       alert("Please add a todo");
+      setTask(trimmed);
       return;
     }
 
-    if (!task.match(/\S/)) {
-      alert("Please add a todo");
-      setTask("");
-      return;
-    }
-
-    onAdd(task);
+    onAdd(trimmed);
 
     setTask("");
   }
