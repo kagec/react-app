@@ -41,6 +41,8 @@ const App = () => {
       setFilter={setFilter}
     />
   ));
+  const filteredTodo =
+    filter === "All" ? todos : todos.filter(FILTER_LIST[filter]);
 
   function deleteTodo(id) {
     setTodos(todos.filter((todo) => todo.id !== id));
@@ -70,20 +72,18 @@ const App = () => {
       <div className="form">
         <AddTodo onAdd={addTodo} />
         {todos.length > 0 ? (
-          <Button color={"red"} text={"Delete All"} onClick={deleteAll} />
-        ) : (
-          ""
-        )}
+          <Button color="red" text="Delete All" onClick={deleteAll} />
+        ) : null}
       </div>
-      {todos.length > 0 ? filterList : ""}
-      {todos.length > 0 ? (
+      {todos.length > 0 ? filterList : null}
+      {filteredTodo.length > 0 ? (
         <Todos
-          todos={todos.filter(FILTER_LIST[filter])}
+          todos={filteredTodo}
           onDelete={deleteTodo}
           onClick={toggleCompleted}
         />
       ) : (
-        "No Todos To Show"
+        <p>No Todos To Show</p>
       )}
     </div>
   );

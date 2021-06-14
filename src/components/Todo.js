@@ -3,7 +3,7 @@ import { ImCheckboxChecked, ImCheckboxUnchecked } from "react-icons/im";
 
 const Todo = ({ todo, onDelete, onClick }) => {
   return (
-    <div className={`todo ${todo.completed && "completed"}`}>
+    <div className={`todo ${todo.completed ? "completed" : ""}`}>
       <h2>{todo.task}</h2>
       {todo.completed ? (
         <ImCheckboxChecked onClick={() => onClick(todo.id)} />
