@@ -70,12 +70,10 @@ const App = () => {
       <div className="form">
         <AddTodo onAdd={addTodo} />
         {todos.length > 0 ? (
-          <Button color={"red"} text={"Delete All"} onClick={deleteAll} />
-        ) : (
-          ""
-        )}
+          <Button color="red" text="Delete All" onClick={deleteAll} />
+        ) : null}
       </div>
-      {todos.length > 0 ? filterList : ""}
+      {todos.length > 0 ? filterList : null}
       {todos.length > 0 ? (
         <Todos
           todos={todos.filter(FILTER_LIST[filter])}
