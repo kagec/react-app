@@ -41,6 +41,8 @@ const App = () => {
       setFilter={setFilter}
     />
   ));
+  const filteredTodo =
+    filter === "All" ? todos : todos.filter(FILTER_LIST[filter]);
 
   function deleteTodo(id) {
     setTodos(todos.filter((todo) => todo.id !== id));
@@ -74,14 +76,14 @@ const App = () => {
         ) : null}
       </div>
       {todos.length > 0 ? filterList : null}
-      {todos.length > 0 ? (
+      {filteredTodo.length > 0 ? (
         <Todos
-          todos={filter === "All" ? todos : todos.filter(FILTER_LIST[filter])}
+          todos={filteredTodo}
           onDelete={deleteTodo}
           onClick={toggleCompleted}
         />
       ) : (
-        "No Todos To Show"
+        <p>No Todos To Show</p>
       )}
     </div>
   );
