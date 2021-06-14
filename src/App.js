@@ -76,7 +76,7 @@ const App = () => {
       {todos.length > 0 ? filterList : null}
       {todos.length > 0 ? (
         <Todos
-          todos={todos.filter(FILTER_LIST[filter])}
+          todos={filter === "All" ? todos : todos.filter(FILTER_LIST[filter])}
           onDelete={deleteTodo}
           onClick={toggleCompleted}
         />
