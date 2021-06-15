@@ -49,8 +49,14 @@ const App = () => {
     }
   }
 
-  function deleteTodo(id) {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  async function deleteTodo(id) {
+    try {
+      await axios.delete(`http://localhost:5000/todos/${id}`);
+
+      setTodos(todos.filter((todo) => todo.id !== id));
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   function deleteAll() {

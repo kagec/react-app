@@ -9,11 +9,6 @@
       "id": 1,
       "task": "Sleep",
       "completed": false
-    },
-    {
-      "id": 2,
-      "task": "Repeat",
-      "completed": false
     }
   ]
 }
