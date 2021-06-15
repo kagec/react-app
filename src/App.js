@@ -19,6 +19,7 @@ const App = () => {
   const [todos, setTodos] = useState([]);
   const [filter, setFilter] = useState("All");
   const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const filterList = FILTER_NAME.map((name) => (
     <FilterButton
       name={name}
@@ -32,8 +33,15 @@ const App = () => {
 
   useEffect(() => {
     const didGetTodo = async () => {
-      const todosFromServer = await getTodos();
-      setTodos(todosFromServer);
+      try {
+        const todosFromServer = await getTodos();
+        // await new Promise(r => setTimeout(r, 1500));
+        setIsLoaded(true);
+        setTodos(todosFromServer);
+      } catch (e) {
+        setIsLoaded(true);
+        setError(e);
+      }
     };
 
     didGetTodo();
@@ -43,6 +51,8 @@ const App = () => {
     try {
       const res = await axios.get("http://localhost:5000/todos");
       const data = res.data;
+
+      await new Promise((r) => setTimeout(r, 3000));
 
       return data;
     } catch (e) {
@@ -123,6 +133,8 @@ const App = () => {
       </div>
       {error ? (
         <div>Error: {error.message}</div>
+      ) : !isLoaded ? (
+        <div>Loading...</div>
       ) : (
         <div>
           {" "}
