@@ -1,24 +1,19 @@
 {
   "todos": [
     {
-      "task": "a",
-      "completed": true,
+      "task": "Sleep",
+      "completed": false,
       "id": 1
     },
     {
-      "task": "v",
-      "completed": true,
+      "task": "Eat",
+      "completed": false,
       "id": 2
     },
     {
-      "task": "d",
+      "task": "Repeat",
       "completed": false,
       "id": 3
-    },
-    {
-      "task": "s",
-      "completed": false,
-      "id": 4
     }
   ]
 }

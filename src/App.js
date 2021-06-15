@@ -35,7 +35,7 @@ const App = () => {
     const didGetTodo = async () => {
       try {
         const todosFromServer = await getTodos();
-        // await new Promise(r => setTimeout(r, 1500));
+
         setIsLoaded(true);
         setTodos(todosFromServer);
       } catch (e) {
