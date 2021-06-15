@@ -49,6 +49,16 @@ const App = () => {
     }
   }
 
+  async function getTodo(id) {
+    try {
+      const res = await axios.get(`http://localhost:5000/todos/${id}`);
+      const data = res.data;
+
+      return data;
+    } catch (e) {
+      console.error(e);
+    }
+  }
   async function deleteTodo(id) {
     try {
       await axios.delete(`http://localhost:5000/todos/${id}`);
@@ -77,12 +87,18 @@ const App = () => {
     }
   }
 
-  function toggleCompleted(id) {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
+  async function toggleCompleted(id) {
+    const todoToToggle = await getTodo(id);
+    const updTodo = { ...todoToToggle, completed: !todoToToggle.completed };
+
+    try {
+      const res = await axios.put(`http://localhost:5000/todos/${id}`, updTodo);
+      const data = res.data;
+
+      setTodos(todos.map((todo) => (todo.id === id ? data : todo)));
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   return (
