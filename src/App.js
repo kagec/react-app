@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import Todos from "./components/Todos";
 import AddTodo from "./components/AddTodo";
 import Button from "./components/Button";
 import FilterButton from "./components/FilterButton";
+import axios from "axios";
 
 const FILTER_LIST = {
   All: () => true,
@@ -15,24 +16,10 @@ const FILTER_LIST = {
 const FILTER_NAME = Object.keys(FILTER_LIST);
 
 const App = () => {
-  const [todos, setTodos] = useState([
-    {
-      id: 0,
-      task: "Eat",
-      completed: false,
-    },
-    {
-      id: 1,
-      task: "Sleep",
-      completed: false,
-    },
-    {
-      id: 2,
-      task: "Repeat",
-      completed: false,
-    },
-  ]);
+  const [todos, setTodos] = useState([]);
   const [filter, setFilter] = useState("All");
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const filterList = FILTER_NAME.map((name) => (
     <FilterButton
       name={name}
@@ -44,26 +31,95 @@ const App = () => {
   const filteredTodo =
     filter === "All" ? todos : todos.filter(FILTER_LIST[filter]);
 
-  function deleteTodo(id) {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  useEffect(() => {
+    const didGetTodo = async () => {
+      try {
+        const todosFromServer = await getTodos();
+        // await new Promise(r => setTimeout(r, 1500));
+        setIsLoaded(true);
+        setTodos(todosFromServer);
+      } catch (e) {
+        setIsLoaded(true);
+        setError(e);
+      }
+    };
+
+    didGetTodo();
+  }, []);
+
+  async function getTodos() {
+    try {
+      const res = await axios.get("http://localhost:5000/todos");
+      const data = res.data;
+
+      await new Promise((r) => setTimeout(r, 3000));
+
+      return data;
+    } catch (e) {
+      setError(e);
+    }
   }
 
-  function deleteAll() {
-    setTodos([]);
+  async function getTodo(id) {
+    try {
+      const res = await axios.get(`http://localhost:5000/todos/${id}`);
+      const data = res.data;
+
+      return data;
+    } catch (e) {
+      setError(e);
+    }
   }
 
-  function addTodo(todo) {
-    const id = Math.floor(Math.random() * 10000) + 1;
-    const newTodo = { id, completed: false, task: todo };
-    setTodos([...todos, newTodo]);
+  async function deleteTodo(id) {
+    try {
+      await axios.delete(`http://localhost:5000/todos/${id}`);
+
+      setTodos(todos.filter((todo) => todo.id !== id));
+    } catch (e) {
+      setError(e);
+    }
   }
 
-  function toggleCompleted(id) {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
+  async function deleteAll() {
+    const todoList = await getTodos();
+    try {
+      await Promise.all(
+        todoList.map(async (todo) => await deleteTodo(todo.id))
+      );
+
+      setTodos([]);
+    } catch (e) {
+      setError(e);
+    }
+  }
+
+  async function addTodo(todo) {
+    try {
+      const res = await axios.post("http://localhost:5000/todos", {
+        task: todo,
+        completed: false,
+      });
+      const data = res.data;
+
+      setTodos([...todos, data]);
+    } catch (e) {
+      setError(e);
+    }
+  }
+
+  async function toggleCompleted(id) {
+    const todoToToggle = await getTodo(id);
+    const updTodo = { ...todoToToggle, completed: !todoToToggle.completed };
+
+    try {
+      const res = await axios.put(`http://localhost:5000/todos/${id}`, updTodo);
+      const data = res.data;
+
+      setTodos(todos.map((todo) => (todo.id === id ? data : todo)));
+    } catch (e) {
+      setError(e);
+    }
   }
 
   return (
@@ -75,15 +131,24 @@ const App = () => {
           <Button color="red" text="Delete All" onClick={deleteAll} />
         ) : null}
       </div>
-      {todos.length > 0 ? filterList : null}
-      {filteredTodo.length > 0 ? (
-        <Todos
-          todos={filteredTodo}
-          onDelete={deleteTodo}
-          onClick={toggleCompleted}
-        />
+      {error ? (
+        <div>Error: {error.message}</div>
+      ) : !isLoaded ? (
+        <div>Loading...</div>
       ) : (
-        <p>No Todos To Show</p>
+        <div>
+          {" "}
+          {todos.length > 0 ? filterList : null}
+          {filteredTodo.length > 0 ? (
+            <Todos
+              todos={filteredTodo}
+              onDelete={deleteTodo}
+              onClick={toggleCompleted}
+            />
+          ) : (
+            <p>No Todos To Show</p>
+          )}
+        </div>
       )}
     </div>
   );
