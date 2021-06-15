@@ -71,8 +71,17 @@ const App = () => {
     }
   }
 
-  function deleteAll() {
-    setTodos([]);
+  async function deleteAll() {
+    const todoList = await getTodos();
+    try {
+      await Promise.all(
+        todoList.map(async (todo) => await deleteTodo(todo.id))
+      );
+
+      setTodos([]);
+    } catch (e) {
+      setError(e);
+    }
   }
 
   async function addTodo(todo) {
