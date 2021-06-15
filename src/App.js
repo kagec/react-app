@@ -18,6 +18,7 @@ const FILTER_NAME = Object.keys(FILTER_LIST);
 const App = () => {
   const [todos, setTodos] = useState([]);
   const [filter, setFilter] = useState("All");
+  const [error, setError] = useState(null);
   const filterList = FILTER_NAME.map((name) => (
     <FilterButton
       name={name}
@@ -45,7 +46,7 @@ const App = () => {
 
       return data;
     } catch (e) {
-      console.error(e);
+      setError(e);
     }
   }
 
@@ -56,16 +57,17 @@ const App = () => {
 
       return data;
     } catch (e) {
-      console.error(e);
+      setError(e);
     }
   }
+
   async function deleteTodo(id) {
     try {
       await axios.delete(`http://localhost:5000/todos/${id}`);
 
       setTodos(todos.filter((todo) => todo.id !== id));
     } catch (e) {
-      console.error(e);
+      setError(e);
     }
   }
 
@@ -83,7 +85,7 @@ const App = () => {
 
       setTodos([...todos, data]);
     } catch (e) {
-      console.error(e);
+      setError(e);
     }
   }
 
@@ -97,7 +99,7 @@ const App = () => {
 
       setTodos(todos.map((todo) => (todo.id === id ? data : todo)));
     } catch (e) {
-      console.error(e);
+      setError(e);
     }
   }
 
@@ -110,15 +112,22 @@ const App = () => {
           <Button color="red" text="Delete All" onClick={deleteAll} />
         ) : null}
       </div>
-      {todos.length > 0 ? filterList : null}
-      {filteredTodo.length > 0 ? (
-        <Todos
-          todos={filteredTodo}
-          onDelete={deleteTodo}
-          onClick={toggleCompleted}
-        />
+      {error ? (
+        <div>Error: {error.message}</div>
       ) : (
-        <p>No Todos To Show</p>
+        <div>
+          {" "}
+          {todos.length > 0 ? filterList : null}
+          {filteredTodo.length > 0 ? (
+            <Todos
+              todos={filteredTodo}
+              onDelete={deleteTodo}
+              onClick={toggleCompleted}
+            />
+          ) : (
+            <p>No Todos To Show</p>
+          )}
+        </div>
       )}
     </div>
   );
