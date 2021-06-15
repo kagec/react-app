@@ -63,10 +63,18 @@ const App = () => {
     setTodos([]);
   }
 
-  function addTodo(todo) {
-    const id = Math.floor(Math.random() * 10000) + 1;
-    const newTodo = { id, completed: false, task: todo };
-    setTodos([...todos, newTodo]);
+  async function addTodo(todo) {
+    try {
+      const res = await axios.post("http://localhost:5000/todos", {
+        task: todo,
+        completed: false,
+      });
+      const data = res.data;
+
+      setTodos([...todos, data]);
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   function toggleCompleted(id) {
