@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import Todos from "./components/Todos";
 import AddTodo from "./components/AddTodo";
 import Button from "./components/Button";
 import FilterButton from "./components/FilterButton";
+import axios from "axios";
 
 const FILTER_LIST = {
   All: () => true,
@@ -15,23 +16,7 @@ const FILTER_LIST = {
 const FILTER_NAME = Object.keys(FILTER_LIST);
 
 const App = () => {
-  const [todos, setTodos] = useState([
-    {
-      id: 0,
-      task: "Eat",
-      completed: false,
-    },
-    {
-      id: 1,
-      task: "Sleep",
-      completed: false,
-    },
-    {
-      id: 2,
-      task: "Repeat",
-      completed: false,
-    },
-  ]);
+  const [todos, setTodos] = useState([]);
   const [filter, setFilter] = useState("All");
   const filterList = FILTER_NAME.map((name) => (
     <FilterButton
@@ -43,6 +28,26 @@ const App = () => {
   ));
   const filteredTodo =
     filter === "All" ? todos : todos.filter(FILTER_LIST[filter]);
+
+  useEffect(() => {
+    const didGetTodo = async () => {
+      const todosFromServer = await getTodos();
+      setTodos(todosFromServer);
+    };
+
+    didGetTodo();
+  }, []);
+
+  async function getTodos() {
+    try {
+      const res = await axios.get("http://localhost:5000/todos");
+      const data = res.data;
+
+      return data;
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   function deleteTodo(id) {
     setTodos(todos.filter((todo) => todo.id !== id));
