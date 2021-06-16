@@ -55,7 +55,7 @@ const App = () => {
 
       return data;
     } catch (e) {
-      setError(e);
+      throw new Error("データを取得できませんでした");
     }
   }
 
