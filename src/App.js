@@ -49,8 +49,7 @@ const App = () => {
 
   async function getTodos() {
     try {
-      const res = await axios.get("http://localhost:5000/todos");
-      const data = res.data;
+      const { data } = await axios.get("http://localhost:5000/todos");
 
       await new Promise((r) => setTimeout(r, 3000));
 
@@ -62,8 +61,7 @@ const App = () => {
 
   async function getTodo(id) {
     try {
-      const res = await axios.get(`http://localhost:5000/todos/${id}`);
-      const data = res.data;
+      const { data } = await axios.get(`http://localhost:5000/todos/${id}`);
 
       return data;
     } catch (e) {
@@ -94,11 +92,10 @@ const App = () => {
 
   async function addTodo(todo) {
     try {
-      const res = await axios.post("http://localhost:5000/todos", {
+      const { data } = await axios.post("http://localhost:5000/todos", {
         task: todo,
         completed: false,
       });
-      const data = res.data;
 
       setTodos([...todos, data]);
     } catch (e) {
@@ -111,8 +108,10 @@ const App = () => {
     const updTodo = { ...todoToToggle, completed: !todoToToggle.completed };
 
     try {
-      const res = await axios.put(`http://localhost:5000/todos/${id}`, updTodo);
-      const data = res.data;
+      const { data } = await axios.put(
+        `http://localhost:5000/todos/${id}`,
+        updTodo
+      );
 
       setTodos(todos.map((todo) => (todo.id === id ? data : todo)));
     } catch (e) {
