@@ -84,9 +84,7 @@ const App = () => {
   async function deleteAll() {
     const todoList = await getTodos();
     try {
-      await Promise.all(
-        todoList.map(async (todo) => await deleteTodo(todo.id))
-      );
+      await Promise.all(todoList.map((todo) => deleteTodo(todo.id)));
 
       setTodos([]);
     } catch (e) {
