@@ -6,9 +6,9 @@ const Todo = ({ todo, onDelete, onClick }) => {
     <div className={`todo ${todo.completed ? "completed" : ""}`}>
       <h2>{todo.task}</h2>
       {todo.completed ? (
-        <ImCheckboxChecked onClick={() => onClick(todo.id)} />
+        <ImCheckboxChecked onClick={() => onClick(todo)} />
       ) : (
-        <ImCheckboxUnchecked onClick={() => onClick(todo.id)} />
+        <ImCheckboxUnchecked onClick={() => onClick(todo)} />
       )}
       <FaTimes
         style={{ color: "red", cursor: "pointer" }}

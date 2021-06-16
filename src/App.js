@@ -59,16 +59,6 @@ const App = () => {
     }
   }
 
-  async function getTodo(id) {
-    try {
-      const { data } = await axios.get(`http://localhost:5000/todos/${id}`);
-
-      return data;
-    } catch (e) {
-      setError(e);
-    }
-  }
-
   async function deleteTodo(id) {
     try {
       await axios.delete(`http://localhost:5000/todos/${id}`);
@@ -103,15 +93,13 @@ const App = () => {
     }
   }
 
-  async function toggleCompleted(id) {
-    const todoToToggle = await getTodo(id);
-    const updTodo = { ...todoToToggle, completed: !todoToToggle.completed };
-
+  async function toggleCompleted(todo) {
     try {
-      const { data } = await axios.put(
-        `http://localhost:5000/todos/${id}`,
-        updTodo
-      );
+      const { id } = todo;
+      const { data } = await axios.put(`http://localhost:5000/todos/${id}`, {
+        ...todo,
+        completed: !todo.completed,
+      });
 
       setTodos(todos.map((todo) => (todo.id === id ? data : todo)));
     } catch (e) {
