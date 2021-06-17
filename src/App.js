@@ -34,10 +34,11 @@ const App = () => {
   useEffect(() => {
     const didGetTodo = async () => {
       try {
-        const todosFromServer = await getTodos();
+        const { data } = await axios.get("http://localhost:5000/todos");
+        await new Promise((r) => setTimeout(r, 500));
 
         setIsLoaded(true);
-        setTodos(todosFromServer);
+        setTodos(data);
       } catch (e) {
         setIsLoaded(true);
         setError(e);
@@ -46,18 +47,6 @@ const App = () => {
 
     didGetTodo();
   }, []);
-
-  async function getTodos() {
-    try {
-      const { data } = await axios.get("http://localhost:5000/todos");
-
-      await new Promise((r) => setTimeout(r, 3000));
-
-      return data;
-    } catch (e) {
-      throw new Error("データを取得できませんでした");
-    }
-  }
 
   async function deleteTodo(id) {
     try {
@@ -70,9 +59,8 @@ const App = () => {
   }
 
   async function deleteAll() {
-    const todoList = await getTodos();
     try {
-      await Promise.all(todoList.map((todo) => deleteTodo(todo.id)));
+      await Promise.all(todos.map((todo) => deleteTodo(todo.id)));
 
       setTodos([]);
     } catch (e) {
@@ -122,7 +110,6 @@ const App = () => {
         <div>Loading...</div>
       ) : (
         <div>
-          {" "}
           {todos.length > 0 ? filterList : null}
           {filteredTodo.length > 0 ? (
             <Todos
