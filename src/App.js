@@ -1,38 +1,20 @@
-import React, { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
+import React from "react";
+import { Switch, Redirect } from "react-router-dom";
 import TodoApp from "./components/TodoApp";
 import "./App.css";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
+import { PrivateRoute } from "./components/PrivateRoute";
+import { UnAuthRoute } from "./components/UnAuthRoute";
 
 const App = () => {
-  const [signIn, setSignIn] = useState(false);
-
-  const toggleSignIn = () => {
-    setSignIn(!signIn);
-  };
   return (
-    <Router>
-      {signIn ? (
-        <Switch>
-          <Route exact path="/todos" component={TodoApp} />
-          <Redirect to="/todos" />
-        </Switch>
-      ) : (
-        <Switch>
-          <Route exact path="/signin">
-            <SignIn setSignIn={toggleSignIn} />
-          </Route>
-          <Route exact path="/signup" component={SignUp} />
-          <Redirect to="/signin" />
-        </Switch>
-      )}
-    </Router>
+    <Switch>
+      <PrivateRoute exact path="/todos" component={TodoApp} />
+      <UnAuthRoute exact path="/signin" component={SignIn} />
+      <UnAuthRoute exact path="/signup" component={SignUp} />
+      <Redirect to="/todos" />
+    </Switch>
   );
 };
 
