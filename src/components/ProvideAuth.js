@@ -7,10 +7,10 @@ export const useAuth = () => {
   return useContext(authContext);
 };
 
-export const ProvideAuth = ({ children }) => {
+function useProvideAuth() {
   const [isSignIn, setIsSignIn] = useState(false);
 
-  const auth = {
+  const UseProvideAuth = {
     isSignIn,
     signIn() {
       setIsSignIn(true);
@@ -20,5 +20,10 @@ export const ProvideAuth = ({ children }) => {
     },
   };
 
+  return UseProvideAuth;
+}
+
+export const ProvideAuth = ({ children }) => {
+  const auth = useProvideAuth();
   return <Provider value={auth}>{children}</Provider>;
 };
