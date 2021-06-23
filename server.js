@@ -1,29 +1,33 @@
+const fs = require("fs");
 const jsonServer = require("json-server");
+const jwt = require("jsonwebtoken");
 
+const db = JSON.parse(fs.readFileSync("./db.json", "UTF-8"));
 const server = jsonServer.create();
 const router = jsonServer.router("./db.json");
 const middlewares = jsonServer.defaults();
+const SECRET_KEY = "abcdefg";
 
 server.use(middlewares);
-
-server.get("todos", (req, res) => {
-  res.jsonp(req.query);
-});
-
 server.use(jsonServer.bodyParser);
 
-server.use((req, res, next) => {
-  if (req.method === "POST") {
-    req.body.createdAt = Date.now();
-  }
-  next();
-});
+server.post("/auth/signin", (req, res) => {
+  const { email, password } = req.body;
+  const OPTION = {
+    expiresIn: "1m",
+  };
 
-server.use((req, res, next) => {
-  if (req.method === "PUT") {
-    req.body.updatedAt = Date.now();
+  if (
+    db.users.findIndex(
+      (user) => user.email === email && user.password === password
+    ) === -1
+  ) {
+    res.status(401).json("Unauthorized");
+    return;
   }
-  next();
+
+  const token = jwt.sign({ email, password }, SECRET_KEY, OPTION);
+  res.status(200).json({ token });
 });
 
 server.use(router);
