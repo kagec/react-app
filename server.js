@@ -36,10 +36,7 @@ server.use((req, res, next) => {
   }
 
   try {
-    const decode = jwt.verify(
-      req.headers.authorization.split(" ")[1],
-      SECRET_KEY
-    );
+    jwt.verify(req.headers.authorization.split(" ")[1], SECRET_KEY);
     next();
   } catch (e) {
     res.status(401).json("Unauthorized");
