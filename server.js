@@ -16,10 +16,11 @@ server.post("/auth/signin", (req, res) => {
   const OPTION = {
     expiresIn: "30m",
   };
+  const user = db.users.find(
+    (user) => user.email === email && user.password === password
+  );
 
-  if (
-    !db.users.some((user) => user.email === email && user.password === password)
-  ) {
+  if (!user) {
     return res.status(401).json("Unauthorized");
   }
 
