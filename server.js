@@ -31,8 +31,7 @@ server.use((req, res, next) => {
     req.headers.authorization === undefined ||
     req.headers.authorization.split(" ")[0] !== "Bearer"
   ) {
-    res.status(401).json("Unauthorized");
-    return;
+    return res.status(401).json("Unauthorized");
   }
 
   try {
