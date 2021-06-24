@@ -24,7 +24,11 @@ server.post("/auth/signin", (req, res) => {
     return res.status(401).json("Unauthorized");
   }
 
-  const token = jwt.sign({ email, password }, SECRET_KEY, OPTION);
+  const token = jwt.sign(
+    { id: user.id, email: user.email },
+    SECRET_KEY,
+    OPTION
+  );
   res.status(200).json({ token });
 });
 
