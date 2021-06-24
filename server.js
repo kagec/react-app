@@ -12,16 +12,18 @@ server.use(middlewares);
 server.use(jsonServer.bodyParser);
 
 server.post("/auth/signin", (req, res) => {
-  const { email, id } = req.body;
+  const { email, password } = req.body;
   const OPTION = {
     expiresIn: "30m",
   };
 
-  if (!db.users.some((user) => user.email === email && user.id === id)) {
+  if (
+    !db.users.some((user) => user.email === email && user.password === password)
+  ) {
     return res.status(401).json("Unauthorized");
   }
 
-  const token = jwt.sign({ email, id }, SECRET_KEY, OPTION);
+  const token = jwt.sign({ email, password }, SECRET_KEY, OPTION);
   res.status(200).json({ token });
 });
 
