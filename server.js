@@ -18,8 +18,7 @@ server.post("/auth/signin", (req, res) => {
   };
 
   if (!db.users.some((user) => user.email === email && user.id === id)) {
-    res.status(401).json("Unauthorized");
-    return;
+    return res.status(401).json("Unauthorized");
   }
 
   const token = jwt.sign({ email, id }, SECRET_KEY, OPTION);
