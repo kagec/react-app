@@ -12,16 +12,23 @@ server.use(middlewares);
 server.use(jsonServer.bodyParser);
 
 server.post("/auth/signin", (req, res) => {
-  const { email, id } = req.body;
+  const { email, password } = req.body;
   const OPTION = {
     expiresIn: "30m",
   };
+  const user = db.users.find(
+    (user) => user.email === email && user.password === password
+  );
 
-  if (!db.users.some((user) => user.email === email && user.id === id)) {
+  if (!user) {
     return res.status(401).json("Unauthorized");
   }
 
-  const token = jwt.sign({ email, id }, SECRET_KEY, OPTION);
+  const token = jwt.sign(
+    { id: user.id, email: user.email },
+    SECRET_KEY,
+    OPTION
+  );
   res.status(200).json({ token });
 });
 
