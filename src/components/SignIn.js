@@ -10,7 +10,7 @@ const SignIn = () => {
       <h4>SignIn</h4>
       <form>
         <input type="text" placeholder="email" />
-        <input type="text" placeholder="password" />
+        <input type="password" placeholder="password" />
         <input className="btn" type="submit" value="Sign In" />
       </form>
 
