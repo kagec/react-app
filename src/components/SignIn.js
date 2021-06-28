@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "./ProvideAuth";
@@ -7,10 +8,34 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const { data } = await axios.post("http://localhost:5000/auth/signin", {
+        email,
+        password,
+      });
+
+      localStorage.setItem("token", data.token);
+
+      setEmail("");
+      setPassword("");
+      signIn();
+    } catch (e) {
+      alert(e.message);
+
+      setEmail("");
+      setPassword("");
+
+      return;
+    }
+  };
+
   return (
     <div>
       <h4>SignIn</h4>
-      <form>
+      <form onSubmit={onSubmit}>
         <input
           type="text"
           placeholder="email"
