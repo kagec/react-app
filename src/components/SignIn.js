@@ -19,8 +19,6 @@ const SignIn = () => {
 
       localStorage.setItem("token", data.token);
 
-      setEmail("");
-      setPassword("");
       signIn();
     } catch (e) {
       alert(e.message);
