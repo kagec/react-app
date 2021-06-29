@@ -25,8 +25,6 @@ const SignIn = () => {
 
       setEmail("");
       setPassword("");
-
-      return;
     }
   };
 
