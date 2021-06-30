@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 const SignUp = () => {
   return (
     <div>
-      <h4>SignUn</h4>
+      <h4>SignUp</h4>
       <p>
         登録済みの方は<Link to="signin">Sign In </Link>
       </p>
