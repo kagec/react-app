@@ -29,6 +29,11 @@ const App = () => {
   ));
   const filteredTodo =
     filter === "All" ? todos : todos.filter(FILTER_LIST[filter]);
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  }
 
   useEffect(() => {
     const didGetTodo = async () => {
