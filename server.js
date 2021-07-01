@@ -11,6 +11,21 @@ const SECRET_KEY = "abcdefg";
 server.use(middlewares);
 server.use(jsonServer.bodyParser);
 
+server.post("/auth/signup", (req, res) => {
+  const { email } = req.body;
+  OPTION = {
+    expiresIn: "5m",
+  };
+  const user = db.users.some((user) => user.email === email);
+
+  if (user) {
+    return res.status(401).json("Unauthorized");
+  }
+
+  const token = jwt.sign({ email: email }, SECRET_KEY, OPTION);
+  res.status(200).json({ token });
+});
+
 server.post("/auth/signin", (req, res) => {
   const { email, password } = req.body;
   const OPTION = {
