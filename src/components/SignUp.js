@@ -14,8 +14,7 @@ const SignUp = () => {
 
       return data.token;
     } catch (e) {
-      alert(e.message);
-      return null;
+      throw new Error(e.message);
     }
   };
 
