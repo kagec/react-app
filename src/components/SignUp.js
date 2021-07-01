@@ -19,10 +19,31 @@ const SignUp = () => {
     }
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const token = await authSignUp();
+
+      if (token) {
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      } else {
+        axios.defaults.headers.common["Authorization"] = null;
+      }
+
+      await axios.post("http://localhost:5000/users", {
+        email,
+        password,
+      });
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
   return (
     <div>
       <h4>SignUp</h4>
-      <form>
+      <form onSubmit={onSubmit}>
         <input
           type="text"
           placeholder="email"
