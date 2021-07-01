@@ -1,9 +1,23 @@
+import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const authSignUp = async () => {
+    try {
+      const { data } = await axios.post("http://localhost:5000/auth/signup", {
+        email,
+      });
+
+      return data.token;
+    } catch (e) {
+      alert(e.message);
+      return null;
+    }
+  };
 
   return (
     <div>
