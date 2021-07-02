@@ -1,8 +1,10 @@
-const fs = require("fs");
 const jsonServer = require("json-server");
 const jwt = require("jsonwebtoken");
+const low = require("lowdb");
+const FileSync = require("lowdb/adapters/FileSync");
 
-const db = JSON.parse(fs.readFileSync("./db.json", "UTF-8"));
+const adapter = new FileSync("db.json");
+const db = low(adapter);
 const server = jsonServer.create();
 const router = jsonServer.router("./db.json");
 const middlewares = jsonServer.defaults();
@@ -16,7 +18,10 @@ server.post("/auth/signup", (req, res) => {
   OPTION = {
     expiresIn: "5m",
   };
-  const user = db.users.some((user) => user.email === email);
+  const user = db
+    .get("users")
+    .value()
+    .some((user) => user.email === email);
 
   if (user) {
     return res.status(401).json("Unauthorized");
@@ -31,9 +36,10 @@ server.post("/auth/signin", (req, res) => {
   const OPTION = {
     expiresIn: "30m",
   };
-  const user = db.users.find(
-    (user) => user.email === email && user.password === password
-  );
+  const user = db
+    .get("users")
+    .value()
+    .find((user) => user.email === email && user.password === password);
 
   if (!user) {
     return res.status(401).json("Unauthorized");
