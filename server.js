@@ -32,7 +32,7 @@ server.post("/auth/signup", (req, res) => {
   db.get("users").push(postUser).value();
   db.write();
 
-  const token = jwt.sign({ email: email }, SECRET_KEY, OPTION);
+  const token = jwt.sign({ id, email }, SECRET_KEY, OPTION);
   res.status(200).json({ token });
 });
 
