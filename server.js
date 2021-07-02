@@ -14,7 +14,9 @@ server.use(middlewares);
 server.use(jsonServer.bodyParser);
 
 server.post("/auth/signup", (req, res) => {
-  const { email } = req.body;
+  const { email, password } = req.body;
+  const id = db.get("users").value().length + 1;
+  const postUser = { id, email, password };
   OPTION = {
     expiresIn: "5m",
   };
@@ -26,6 +28,9 @@ server.post("/auth/signup", (req, res) => {
   if (user) {
     return res.status(401).json("Unauthorized");
   }
+
+  db.get("users").push(postUser).value();
+  db.write();
 
   const token = jwt.sign({ email: email }, SECRET_KEY, OPTION);
   res.status(200).json({ token });
