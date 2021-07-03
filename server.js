@@ -18,7 +18,7 @@ server.post("/auth/signup", (req, res) => {
   const id = db.get("users").value().length + 1;
   const postUser = { id, email, password };
   const OPTION = {
-    expiresIn: "5m",
+    expiresIn: "30m",
   };
   const user = db
     .get("users")
