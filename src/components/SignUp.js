@@ -11,6 +11,14 @@ const SignUp = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
+    const validEmail = email.trim();
+    const validPassword = password.trim();
+
+    if (!validEmail || !validPassword) {
+      alert("Invalid Value");
+      return;
+    }
+
     try {
       const { data } = await axios.post("http://localhost:5000/auth/signup", {
         email,
