@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "./ProvideAuth";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { signIn } = useAuth();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -14,6 +16,21 @@ const SignUp = () => {
         email,
         password,
       });
+
+      try {
+        const { data } = await axios.post("http://localhost:5000/auth/signin", {
+          email,
+          password,
+        });
+
+        localStorage.setItem("token", data.token);
+
+        if (data.token) {
+          signIn();
+        }
+      } catch (e) {
+        throw new Error("Failed to Signin");
+      }
     } catch (e) {
       alert(e.message);
     }
