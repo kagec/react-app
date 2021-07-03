@@ -12,25 +12,14 @@ const SignUp = () => {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5000/auth/signup", {
+      const { data } = await axios.post("http://localhost:5000/auth/signup", {
         email,
         password,
       });
 
-      try {
-        const { data } = await axios.post("http://localhost:5000/auth/signin", {
-          email,
-          password,
-        });
+      localStorage.setItem("token", data.token);
 
-        localStorage.setItem("token", data.token);
-
-        if (data.token) {
-          signIn();
-        }
-      } catch (e) {
-        throw new Error("Failed to Signin");
-      }
+      signIn();
     } catch (e) {
       alert(e.message);
     }
