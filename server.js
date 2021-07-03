@@ -26,7 +26,7 @@ server.post("/auth/signup", (req, res) => {
     .some((user) => user.email === email);
 
   if (user) {
-    return res.status(401).json("Unauthorized");
+    return res.status(400).json("Already Exists");
   }
 
   db.get("users").push(postUser).value();
