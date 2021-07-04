@@ -1,8 +1,10 @@
-const fs = require("fs");
 const jsonServer = require("json-server");
 const jwt = require("jsonwebtoken");
+const low = require("lowdb");
+const FileSync = require("lowdb/adapters/FileSync");
 
-const db = JSON.parse(fs.readFileSync("./db.json", "UTF-8"));
+const adapter = new FileSync("db.json");
+const db = low(adapter);
 const server = jsonServer.create();
 const router = jsonServer.router("./db.json");
 const middlewares = jsonServer.defaults();
@@ -11,14 +13,38 @@ const SECRET_KEY = "abcdefg";
 server.use(middlewares);
 server.use(jsonServer.bodyParser);
 
+server.post("/auth/signup", (req, res) => {
+  const { email, password } = req.body;
+  const id = db.get("users").value().length + 1;
+  const postUser = { id, email, password };
+  const OPTION = {
+    expiresIn: "30m",
+  };
+  const user = db
+    .get("users")
+    .value()
+    .some((user) => user.email === email);
+
+  if (user) {
+    return res.status(400).json("Already Exists");
+  }
+
+  db.get("users").push(postUser).value();
+  db.write();
+
+  const token = jwt.sign({ id, email }, SECRET_KEY, OPTION);
+  res.status(200).json({ token });
+});
+
 server.post("/auth/signin", (req, res) => {
   const { email, password } = req.body;
   const OPTION = {
     expiresIn: "30m",
   };
-  const user = db.users.find(
-    (user) => user.email === email && user.password === password
-  );
+  const user = db
+    .get("users")
+    .value()
+    .find((user) => user.email === email && user.password === password);
 
   if (!user) {
     return res.status(401).json("Unauthorized");
