@@ -58,6 +58,22 @@ server.post("/auth/signin", (req, res) => {
   res.status(200).json({ token });
 });
 
+server.put("/change/password", (req, res) => {
+  const { id, crntPassword, newPassword } = req.body;
+
+  const user = db
+    .get("users")
+    .value()
+    .find((user) => user.id === id && user.password === crntPassword);
+
+  if (!user) {
+    return res.status(400).json("Wrong Current Password");
+  }
+
+  db.get("users").find({ id: id }).assign({ password: newPassword }).write();
+  res.status(200).json("Password Changed");
+});
+
 server.use((req, res, next) => {
   const auth = req.headers.authorization?.split(" ");
 
