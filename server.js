@@ -60,6 +60,17 @@ server.post("/auth/signin", (req, res) => {
 
 server.put("/users/password", (req, res) => {
   const { id, currentPassword, newPassword } = req.body;
+  const auth = req.headers.authorization?.split(" ");
+
+  if (auth?.[0] !== "Bearer") {
+    return res.status(401).json("Unauthorized");
+  }
+
+  try {
+    jwt.verify(auth[1] ?? "", SECRET_KEY);
+  } catch (e) {
+    return res.status(401).json("Unauthorized");
+  }
 
   const user = db
     .get("users")
