@@ -58,7 +58,7 @@ server.post("/auth/signin", (req, res) => {
   res.status(200).json({ token });
 });
 
-server.put("/change/password", (req, res) => {
+server.put("/users/password", (req, res) => {
   const { id, currentPassword, newPassword } = req.body;
 
   const user = db
