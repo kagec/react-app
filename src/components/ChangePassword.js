@@ -7,6 +7,11 @@ const SECRET_KEY = "abcdefg";
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  }
 
   const decoded = jwt.verify(localStorage.getItem("token"), SECRET_KEY);
 
