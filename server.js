@@ -59,12 +59,12 @@ server.post("/auth/signin", (req, res) => {
 });
 
 server.put("/change/password", (req, res) => {
-  const { id, crntPassword, newPassword } = req.body;
+  const { id, currentPassword, newPassword } = req.body;
 
   const user = db
     .get("users")
     .value()
-    .find((user) => user.id === id && user.password === crntPassword);
+    .find((user) => user.id === id && user.password === currentPassword);
 
   if (!user) {
     return res.status(400).json("Wrong Current Password");
