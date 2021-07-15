@@ -74,18 +74,23 @@ server.use((req, res, next) => {
 });
 
 server.put("/users/password", (req, res) => {
-  const { id, currentPassword, newPassword } = req.body;
+  const { payload, currentPassword, newPassword } = req.body;
 
   const user = db
     .get("users")
     .value()
-    .find((user) => user.id === id && user.password === currentPassword);
+    .find(
+      (user) => user.id === payload.id && user.password === currentPassword
+    );
 
   if (!user) {
     return res.status(400).json("Wrong Current Password");
   }
 
-  db.get("users").find({ id: id }).assign({ password: newPassword }).write();
+  db.get("users")
+    .find({ id: payload.id })
+    .assign({ password: newPassword })
+    .write();
   res.status(200).json("Password Changed");
 });
 
