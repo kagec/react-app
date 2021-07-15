@@ -58,33 +58,6 @@ server.post("/auth/signin", (req, res) => {
   res.status(200).json({ token });
 });
 
-server.put("/users/password", (req, res) => {
-  const { id, currentPassword, newPassword } = req.body;
-  const auth = req.headers.authorization?.split(" ");
-
-  if (auth?.[0] !== "Bearer") {
-    return res.status(401).json("Unauthorized");
-  }
-
-  try {
-    jwt.verify(auth[1] ?? "", SECRET_KEY);
-  } catch (e) {
-    return res.status(401).json("Unauthorized");
-  }
-
-  const user = db
-    .get("users")
-    .value()
-    .find((user) => user.id === id && user.password === currentPassword);
-
-  if (!user) {
-    return res.status(400).json("Wrong Current Password");
-  }
-
-  db.get("users").find({ id: id }).assign({ password: newPassword }).write();
-  res.status(200).json("Password Changed");
-});
-
 server.use((req, res, next) => {
   const auth = req.headers.authorization?.split(" ");
 
@@ -98,6 +71,22 @@ server.use((req, res, next) => {
   } catch (e) {
     res.status(401).json("Unauthorized");
   }
+});
+
+server.put("/users/password", (req, res) => {
+  const { id, currentPassword, newPassword } = req.body;
+
+  const user = db
+    .get("users")
+    .value()
+    .find((user) => user.id === id && user.password === currentPassword);
+
+  if (!user) {
+    return res.status(400).json("Wrong Current Password");
+  }
+
+  db.get("users").find({ id: id }).assign({ password: newPassword }).write();
+  res.status(200).json("Password Changed");
 });
 
 server.use(router);
