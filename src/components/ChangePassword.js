@@ -13,8 +13,6 @@ const ChangePassword = () => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   }
 
-  const decoded = jwt.verify(token, SECRET_KEY);
-
   const changePassword = async () => {
     if (
       !currentPassword.trim() ||
@@ -25,11 +23,17 @@ const ChangePassword = () => {
     }
 
     try {
-      axios.put("http://localhost:5000/users/password", {
-        payload: decoded,
-        currentPassword,
-        newPassword,
-      });
+      const decoded = jwt.verify(token, SECRET_KEY);
+
+      try {
+        axios.put("http://localhost:5000/users/password", {
+          payload: decoded,
+          currentPassword,
+          newPassword,
+        });
+      } catch (e) {
+        alert(e.message);
+      }
     } catch (e) {
       alert(e.message);
     }
