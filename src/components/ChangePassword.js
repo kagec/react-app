@@ -13,7 +13,7 @@ const ChangePassword = () => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   }
 
-  const decoded = jwt.verify(localStorage.getItem("token"), SECRET_KEY);
+  const decoded = jwt.verify(token, SECRET_KEY);
 
   const changePassword = async () => {
     if (
