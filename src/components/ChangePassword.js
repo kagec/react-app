@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import jwt from "jsonwebtoken";
+import { useAuth } from "./ProvideAuth";
+import { Redirect } from "react-router-dom";
 
 const SECRET_KEY = "abcdefg";
 
@@ -8,6 +10,7 @@ const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const token = localStorage.getItem("token");
+  const { isSignIn } = useAuth();
 
   if (token) {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -39,7 +42,7 @@ const ChangePassword = () => {
     }
   };
 
-  return (
+  return isSignIn ? (
     <form onSubmit={changePassword}>
       <div>
         <p>Current Password</p>
@@ -59,6 +62,8 @@ const ChangePassword = () => {
         <input className="btn" type="submit" value="Enter" />
       </div>
     </form>
+  ) : (
+    <Redirect to="/signin" />
   );
 };
 
