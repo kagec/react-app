@@ -26,7 +26,7 @@ const ChangePassword = () => {
 
     try {
       axios.put("http://localhost:5000/users/password", {
-        id: decoded.id,
+        payload: decoded,
         currentPassword,
         newPassword,
       });
