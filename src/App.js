@@ -14,7 +14,7 @@ const App = () => {
       <PrivateRoute exact path="/todos" component={TodoApp} />
       <UnAuthRoute exact path="/signin" component={SignIn} />
       <UnAuthRoute exact path="/signup" component={SignUp} />
-      <ChangePassword exact path="/change/password" />
+      <PrivateRoute exact path="/change/password" component={ChangePassword} />
       <Redirect to="/todos" />
     </Switch>
   );
