@@ -26,7 +26,7 @@ const ChangePassword = () => {
     }
 
     try {
-      axios.put("http://localhost:5000/users/password", {
+      await axios.put("http://localhost:5000/users/password", {
         payload: jwt.verify(token, SECRET_KEY),
         currentPassword,
         newPassword,
