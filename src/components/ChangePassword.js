@@ -26,17 +26,11 @@ const ChangePassword = () => {
     }
 
     try {
-      const decoded = jwt.verify(token, SECRET_KEY);
-
-      try {
-        axios.put("http://localhost:5000/users/password", {
-          payload: decoded,
-          currentPassword,
-          newPassword,
-        });
-      } catch (e) {
-        alert(e.message);
-      }
+      axios.put("http://localhost:5000/users/password", {
+        payload: jwt.verify(token, SECRET_KEY),
+        currentPassword,
+        newPassword,
+      });
     } catch (e) {
       alert(e.message);
     }
