@@ -1,8 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import jwt from "jsonwebtoken";
-
-const SECRET_KEY = "abcdefg";
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -24,7 +21,7 @@ const ChangePassword = () => {
 
     try {
       await axios.put("http://localhost:5000/users/password", {
-        payload: jwt.verify(token, SECRET_KEY),
+        payload: JSON.parse(localStorage.getItem("payload")),
         currentPassword,
         newPassword,
       });
