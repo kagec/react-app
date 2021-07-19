@@ -75,6 +75,16 @@ server.use((req, res, next) => {
 
 server.put("/users/password", (req, res) => {
   const { payload, currentPassword, newPassword } = req.body;
+  const auth = req.headers.authorization?.split(" ");
+
+  try {
+    const decoded = jwt.verify(auth[1] ?? "", SECRET_KEY);
+    if (payload.id !== decoded.id || payload.email !== decoded.email) {
+      return res.status(400).json("Not match token and payload");
+    }
+  } catch (e) {
+    return res.status(401).json("Unauthorized");
+  }
 
   const user = db
     .get("users")
