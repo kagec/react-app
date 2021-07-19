@@ -11,7 +11,8 @@ export const useAuth = () => {
 
 function useProvideAuth() {
   try {
-    jwt.verify(localStorage.getItem("token") ?? "", SECRET_KEY);
+    const payload = jwt.verify(localStorage.getItem("token") ?? "", SECRET_KEY);
+    localStorage.setItem("payload", JSON.stringify(payload));
   } catch (e) {
     localStorage.clear();
   }
