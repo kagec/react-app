@@ -74,33 +74,22 @@ server.use((req, res, next) => {
 });
 
 server.put("/users/password", (req, res) => {
-  const { payload, currentPassword, newPassword } = req.body;
-  const auth = req.headers.authorization?.split(" ");
+  const { user, currentPassword, newPassword } = req.body;
+  const { payload } = req;
 
-  try {
-    const decoded = jwt.verify(auth[1] ?? "", SECRET_KEY);
-    if (payload.id !== decoded.id || payload.email !== decoded.email) {
-      return res.status(400).json("Not match token and payload");
-    }
-  } catch (e) {
-    return res.status(401).json("Unauthorized");
+  if (user.id !== payload.id || user.email !== payload.email) {
+    return res.status(400).json("Not match token and payload");
   }
 
-  const user = db
+  const foundUser = db
     .get("users")
-    .value()
-    .find(
-      (user) => user.id === payload.id && user.password === currentPassword
-    );
+    .find(({ id, password }) => id === user.id && password === currentPassword);
 
-  if (!user) {
+  if (!foundUser.value()) {
     return res.status(400).json("Wrong Current Password");
   }
 
-  db.get("users")
-    .find({ id: payload.id })
-    .assign({ password: newPassword })
-    .write();
+  foundUser.assign({ password: newPassword }).write();
   res.status(200).json("Password Changed");
 });
 
