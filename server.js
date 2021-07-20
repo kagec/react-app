@@ -66,7 +66,7 @@ server.use((req, res, next) => {
   }
 
   try {
-    jwt.verify(auth[1] ?? "", SECRET_KEY);
+    req.payload = jwt.verify(auth[1] ?? "", SECRET_KEY);
     next();
   } catch (e) {
     res.status(401).json("Unauthorized");
