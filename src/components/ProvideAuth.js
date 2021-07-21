@@ -1,4 +1,4 @@
-import { useState, useContext, createContext } from "react";
+import { useState, useContext, createContext, useEffect } from "react";
 import jwt from "jsonwebtoken";
 
 const SECRET_KEY = "abcdefg";
@@ -10,17 +10,21 @@ export const useAuth = () => {
 };
 
 function useProvideAuth() {
-  try {
-    const payload = jwt.verify(localStorage.getItem("token") ?? "", SECRET_KEY);
-    localStorage.setItem("payload", JSON.stringify(payload));
-  } catch (e) {
-    localStorage.clear();
-  }
-
   const token = localStorage.getItem("token");
   const [isSignIn, setIsSignIn] = useState(token ? true : false);
+  const [payload, setPayload] = useState(null);
+
+  useEffect(() => {
+    try {
+      setPayload(jwt.verify(localStorage.getItem("token") ?? "", SECRET_KEY));
+    } catch (e) {
+      localStorage.clear();
+      setIsSignIn(false);
+    }
+  }, [isSignIn]);
 
   const UseProvideAuth = {
+    payload,
     isSignIn,
     signIn() {
       setIsSignIn(true);
