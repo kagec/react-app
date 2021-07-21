@@ -1,10 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
+import { useAuth } from "./ProvideAuth";
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const token = localStorage.getItem("token");
+  const { payload } = useAuth();
 
   if (token) {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -21,7 +23,7 @@ const ChangePassword = () => {
 
     try {
       await axios.put("http://localhost:5000/users/password", {
-        payload: JSON.parse(localStorage.getItem("payload")),
+        user: { id: payload.id, email: payload.email },
         currentPassword,
         newPassword,
       });
