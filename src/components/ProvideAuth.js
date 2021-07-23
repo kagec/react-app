@@ -26,6 +26,7 @@ function useProvideAuth() {
     },
     signOut() {
       setIsSignIn(false);
+      localStorage.clear();
     },
   };
 
