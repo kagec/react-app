@@ -1,11 +1,16 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import Button from "./Button";
+import { useAuth } from "./ProvideAuth";
 
 const Header = ({ title }) => {
+  const { signOut } = useAuth();
+
   return (
     <header>
       <h1>{title}</h1>
       <Link to="/change/password">パスワードの変更</Link>
+      <Button color={"darkblue"} text={"Sign Out"} onClick={signOut} />
     </header>
   );
 };
