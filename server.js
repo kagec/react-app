@@ -66,11 +66,31 @@ server.use((req, res, next) => {
   }
 
   try {
-    jwt.verify(auth[1] ?? "", SECRET_KEY);
+    req.payload = jwt.verify(auth[1] ?? "", SECRET_KEY);
     next();
   } catch (e) {
     res.status(401).json("Unauthorized");
   }
+});
+
+server.put("/users/password", (req, res) => {
+  const { user, currentPassword, newPassword } = req.body;
+  const { payload } = req;
+
+  if (user.id !== payload.id || user.email !== payload.email) {
+    return res.status(400).json("Not match token and payload");
+  }
+
+  const foundUser = db
+    .get("users")
+    .find(({ id, password }) => id === user.id && password === currentPassword);
+
+  if (!foundUser.value()) {
+    return res.status(400).json("Wrong Current Password");
+  }
+
+  foundUser.assign({ password: newPassword }).write();
+  res.status(200).json("Password Changed");
 });
 
 server.use(router);
