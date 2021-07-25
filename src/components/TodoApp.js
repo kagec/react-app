@@ -5,6 +5,7 @@ import AddTodo from "./AddTodo";
 import Button from "./Button";
 import FilterButton from "./FilterButton";
 import axios from "axios";
+import { useAuth } from "./ProvideAuth";
 
 const FILTER_LIST = {
   All: () => true,
@@ -30,6 +31,7 @@ const App = () => {
   const filteredTodo =
     filter === "All" ? todos : todos.filter(FILTER_LIST[filter]);
   const token = localStorage.getItem("token");
+  const { payload } = useAuth();
 
   if (token) {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -38,7 +40,9 @@ const App = () => {
   useEffect(() => {
     const didGetTodo = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/todos");
+        const { data } = await axios.get(
+          `http://localhost:5000/todos${payload.id}`
+        );
         await new Promise((r) => setTimeout(r, 500));
 
         setIsLoaded(true);
@@ -50,11 +54,11 @@ const App = () => {
     };
 
     didGetTodo();
-  }, []);
+  }, [payload]);
 
   async function deleteTodo(id) {
     try {
-      await axios.delete(`http://localhost:5000/todos/${id}`);
+      await axios.delete(`http://localhost:5000/todos${payload.id}/${id}`);
 
       setTodos(todos.filter((todo) => todo.id !== id));
     } catch (e) {
@@ -74,10 +78,13 @@ const App = () => {
 
   async function addTodo(todo) {
     try {
-      const { data } = await axios.post("http://localhost:5000/todos", {
-        task: todo,
-        completed: false,
-      });
+      const { data } = await axios.post(
+        `http://localhost:5000/todos${payload.id}`,
+        {
+          task: todo,
+          completed: false,
+        }
+      );
 
       setTodos([...todos, data]);
     } catch (e) {
@@ -88,10 +95,13 @@ const App = () => {
   async function toggleCompleted(todo) {
     try {
       const { id } = todo;
-      const { data } = await axios.put(`http://localhost:5000/todos/${id}`, {
-        ...todo,
-        completed: !todo.completed,
-      });
+      const { data } = await axios.put(
+        `http://localhost:5000/todos${payload.id}/${id}`,
+        {
+          ...todo,
+          completed: !todo.completed,
+        }
+      );
 
       setTodos(todos.map((todo) => (todo.id === id ? data : todo)));
     } catch (e) {
