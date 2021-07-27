@@ -79,6 +79,7 @@ const App = () => {
       const { data } = await axios.post(`http://localhost:5000/todos`, {
         task: todo,
         completed: false,
+        userId: payload.id,
       });
 
       setTodos([...todos, data]);
