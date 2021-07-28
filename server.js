@@ -96,7 +96,6 @@ server.put("/users/password", (req, res) => {
 server.use((req, res, next) => {
   const { payload } = req;
   if (req.method === "GET" && req.path === "/todos") {
-    console.log(payload.id);
     req.query.userId = payload.id.toString();
   }
   next();
