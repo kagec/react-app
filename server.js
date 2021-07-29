@@ -101,6 +101,16 @@ server.use((req, res, next) => {
   next();
 });
 
+server.use((req, res, next) => {
+  const { payload } = req;
+  if (req.method === "DELETE" && req.path === `/users/${payload.id}`) {
+    db.get("users").remove({ id: payload.id }).write();
+    db.get("todos").remove({ userId: payload.id }).write();
+    return res.status(200).json("Account deleted");
+  }
+  next();
+});
+
 server.use(router);
 server.listen(5000, () => {
   console.log("JSON Server is running PORT 5000");
