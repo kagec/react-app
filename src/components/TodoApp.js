@@ -5,6 +5,7 @@ import AddTodo from "./AddTodo";
 import Button from "./Button";
 import FilterButton from "./FilterButton";
 import axios from "axios";
+import { useAuth } from "./ProvideAuth";
 
 const FILTER_LIST = {
   All: () => true,
@@ -30,6 +31,7 @@ const App = () => {
   const filteredTodo =
     filter === "All" ? todos : todos.filter(FILTER_LIST[filter]);
   const token = localStorage.getItem("token");
+  const { payload } = useAuth();
 
   if (token) {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -38,7 +40,7 @@ const App = () => {
   useEffect(() => {
     const didGetTodo = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/todos");
+        const { data } = await axios.get(`http://localhost:5000/todos`);
         await new Promise((r) => setTimeout(r, 500));
 
         setIsLoaded(true);
@@ -50,7 +52,7 @@ const App = () => {
     };
 
     didGetTodo();
-  }, []);
+  }, [payload]);
 
   async function deleteTodo(id) {
     try {
@@ -74,9 +76,10 @@ const App = () => {
 
   async function addTodo(todo) {
     try {
-      const { data } = await axios.post("http://localhost:5000/todos", {
+      const { data } = await axios.post(`http://localhost:5000/todos`, {
         task: todo,
         completed: false,
+        userId: payload.id,
       });
 
       setTodos([...todos, data]);

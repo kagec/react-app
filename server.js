@@ -93,6 +93,14 @@ server.put("/users/password", (req, res) => {
   res.status(200).json("Password Changed");
 });
 
+server.use((req, res, next) => {
+  const { payload } = req;
+  if (req.method === "GET" && req.path === "/todos") {
+    req.query.userId = payload.id.toString();
+  }
+  next();
+});
+
 server.use(router);
 server.listen(5000, () => {
   console.log("JSON Server is running PORT 5000");
