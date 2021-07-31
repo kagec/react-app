@@ -10,6 +10,7 @@ const Header = ({ title }) => {
     <header>
       <h1>{title}</h1>
       <Link to="/change/password">パスワードの変更</Link>
+      <Link to="/delete/account">アカウントの削除</Link>
       <Button color={"darkblue"} text={"Sign Out"} onClick={signOut} />
     </header>
   );
